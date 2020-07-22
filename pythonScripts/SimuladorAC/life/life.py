@@ -60,5 +60,16 @@ def imprimir():
     for i in range(alto):
         print(M[i])
 
-M=applyRules(M)
-imprimir()
+
+def graficar(num):
+    imagen=open("img_%03d.pbm"%num,"w")
+    imagen.write("P1 "+str(ancho)+" "+str(alto))
+    for i in range(alto):
+        for j in range(ancho):
+            imagen.write(" "+str(M[i][j]))
+    imagen.close()
+
+for num in range(80):
+    graficar(num)
+    M=applyRules(M)
+#imprimir()
