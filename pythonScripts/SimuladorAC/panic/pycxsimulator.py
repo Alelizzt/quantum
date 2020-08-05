@@ -78,7 +78,7 @@ class GUI:
         self.rootWindow = Tk()
         self.statusText = StringVar(self.rootWindow, value=self.statusStr) # at this point, statusStr = ""
         # added "self.rootWindow" above by Hiroki Sayama 10/09/2018
-        self.setStatusStr("Simulation not yet started")
+        self.setStatusStr("La simulacion no se ha ejecutado todavia")
 
         self.rootWindow.wm_title(self.titleText) # titleText = 'PyCX Simulator'
         self.rootWindow.protocol('WM_DELETE_WINDOW', self.quitGUI)
@@ -96,10 +96,10 @@ class GUI:
         self.frameParameters = Frame(self.rootWindow)
         self.frameInformation = Frame(self.rootWindow)
         
-        self.notebook.add(self.frameRun,text="Run")
-        self.notebook.add(self.frameSettings,text="Settings")
-        self.notebook.add(self.frameParameters,text="Parameters")
-        self.notebook.add(self.frameInformation,text="Info")
+        self.notebook.add(self.frameRun,text="Ejecutar")
+        self.notebook.add(self.frameSettings,text="Configuraciones")
+        self.notebook.add(self.frameParameters,text="Parametros")
+        self.notebook.add(self.frameInformation,text="Informacion")
         self.notebook.pack(expand=NO, fill=BOTH, padx=5, pady=5 ,side=TOP)
         # self.notebook.grid(row=0, column=0, padx=5, pady=5, sticky='nswe')   # commented out by toshi on 2016-06-21(Tue) 18:31:02
         
@@ -112,43 +112,43 @@ class GUI:
         # -----------------------------------
         # buttonRun
         self.runPauseString = StringVar(self.rootWindow) # added "self.rootWindow" by Hiroki Sayama 10/09/2018
-        self.runPauseString.set("Run")
+        self.runPauseString.set("Ejecutar")
         self.buttonRun = Button(self.frameRun,width=30,height=2,textvariable=self.runPauseString,command=self.runEvent)
         self.buttonRun.pack(side=TOP, padx=5, pady=5)
-        self.showHelp(self.buttonRun,"Runs the simulation (or pauses the running simulation)")
+        self.showHelp(self.buttonRun,"Ejecuta la simulacion (o pausa la simulacion actual)")
         
         # buttonStep
-        self.buttonStep = Button(self.frameRun,width=30,height=2,text='Step Once',command=self.stepOnce)
+        self.buttonStep = Button(self.frameRun,width=30,height=2,text='Un paso a la vez',command=self.stepOnce)
         self.buttonStep.pack(side=TOP, padx=5, pady=5)
-        self.showHelp(self.buttonStep,"Steps the simulation only once")
+        self.showHelp(self.buttonStep,"Ejecuta la simulacion solo una vez")
         
         # buttonReset
-        self.buttonReset = Button(self.frameRun,width=30,height=2,text='Reset',command=self.resetModel)
+        self.buttonReset = Button(self.frameRun,width=30,height=2,text='Reiniciar',command=self.resetModel)
         self.buttonReset.pack(side=TOP, padx=5, pady=5) 
-        self.showHelp(self.buttonReset,"Resets the simulation")
+        self.showHelp(self.buttonReset,"Reinicia la simulacion")
 
         # -----------------------------------
         # frameSettings
         # -----------------------------------
         can = Canvas(self.frameSettings)
         
-        lab = Label(can, width=25,height=1,text="Step size ", justify=LEFT, anchor=W,takefocus=0)
+        lab = Label(can, width=25,height=1,text="Paso numero ", justify=LEFT, anchor=W,takefocus=0)
         lab.pack(side='left')
         
         self.stepScale = Scale(can,from_=1, to=50, resolution=1,command=self.changeStepSize,orient=HORIZONTAL, width=25,length=150)
         self.stepScale.set(self.stepSize)
-        self.showHelp(self.stepScale,"Skips model redraw during every [n] simulation steps\nResults in a faster model run.")
+        self.showHelp(self.stepScale,"Salta el redibujado del modelo cada [n] pasos de la simulacion\nResulta en una ejecucion mas rapida del modelo.")
         self.stepScale.pack(side='left')
         
         can.pack(side='top')
     
         can = Canvas(self.frameSettings)
-        lab = Label(can, width=25,height=1,text="Step visualization delay in ms ", justify=LEFT, anchor=W,takefocus=0)
+        lab = Label(can, width=25,height=1,text="Retrazo de la vizualizacion del paso en ms ", justify=LEFT, anchor=W,takefocus=0)
         lab.pack(side='left')
         self.stepDelay = Scale(can,from_=0, to=max(2000,self.timeInterval),
                                resolution=10,command=self.changeStepDelay,orient=HORIZONTAL, width=25,length=150)
         self.stepDelay.set(self.timeInterval)
-        self.showHelp(self.stepDelay,"The visualization of each step is delays by the given number of milliseconds.")
+        self.showHelp(self.stepDelay,"La visualizacion de cada paso se retrasa por el numero dado de milisegundos.")
         self.stepDelay.pack(side='left')
         
         can.pack(side='top')
@@ -186,13 +186,13 @@ class GUI:
             
         if len(self.parameterSetters) > 0:
             self.buttonSaveParameters = Button(self.frameParameters,width=50,height=1,
-                                               command=self.saveParametersCmd,text="Save parameters to the running model",state=DISABLED)
+                                               command=self.saveParametersCmd,text="Guarda los parametros en el modelo en ejecucion",state=DISABLED)
             self.showHelp(self.buttonSaveParameters,
-                          "Saves the parameter values.\nNot all values may take effect on a running model\nA model reset might be required.")
+                          "Guarda los valores de los parametros.\nNo todos los valores pueden tener efecto en un modelo en ejecucion\nPodria ser necesario un reinicio del modelo.")
             self.buttonSaveParameters.pack(side='top',padx=5,pady=5)
             self.buttonSaveParametersAndReset = Button(self.frameParameters,width=50,height=1,
-                                                       command=self.saveParametersAndResetCmd,text="Save parameters to the model and reset the model")
-            self.showHelp(self.buttonSaveParametersAndReset,"Saves the given parameter values and resets the model")
+                                                       command=self.saveParametersAndResetCmd,text="Guardar los parametros en el modelo y reiniciarlo")
+            self.showHelp(self.buttonSaveParametersAndReset,"Guarda los valores de los parametros dados y reinicia el modelo")
             self.buttonSaveParametersAndReset.pack(side='top',padx=5,pady=5)
             
     # <<<<< Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -211,7 +211,7 @@ class GUI:
     def saveParametersCmd(self):
         for variableSetter in self.parameterSetters:
             variableSetter(float(self.varEntries[variableSetter].get()))
-            self.setStatusStr("New parameter values have been set")
+            self.setStatusStr("Se han establecido los nuevos valores de los parametros")
             
     def saveParametersAndResetCmd(self):
         self.saveParametersCmd()
@@ -223,14 +223,14 @@ class GUI:
         self.running = not self.running
         if self.running:
             self.rootWindow.after(self.timeInterval,self.stepModel)
-            self.runPauseString.set("Pause")
+            self.runPauseString.set("Pausar")
             self.buttonStep.configure(state=DISABLED)
             self.buttonReset.configure(state=DISABLED)
             if len(self.parameterSetters) > 0:
                 self.buttonSaveParameters.configure(state=NORMAL)
                 self.buttonSaveParametersAndReset.configure(state=DISABLED)     
         else:
-            self.runPauseString.set("Continue Run")
+            self.runPauseString.set("Continuar ejecutando")
             self.buttonStep.configure(state=NORMAL)
             self.buttonReset.configure(state=NORMAL)
             if len(self.parameterSetters) > 0:
@@ -241,7 +241,7 @@ class GUI:
         if self.running:
             self.modelStepFunc()
             self.currentStep += 1
-            self.setStatusStr("Step "+str(self.currentStep))
+            self.setStatusStr("Paso "+str(self.currentStep))
             self.status.configure(foreground='black')
             if (self.currentStep) % self.stepSize == 0:
                 self.drawModel()
@@ -249,20 +249,20 @@ class GUI:
 
     def stepOnce(self):
         self.running = False
-        self.runPauseString.set("Continue Run")
+        self.runPauseString.set("Continuar ejecutando")
         self.modelStepFunc()
         self.currentStep += 1
-        self.setStatusStr("Step "+str(self.currentStep))
+        self.setStatusStr("Paso "+str(self.currentStep))
         self.drawModel()
         if len(self.parameterSetters) > 0:
             self.buttonSaveParameters.configure(state=NORMAL)
 
     def resetModel(self):
         self.running = False        
-        self.runPauseString.set("Run")
+        self.runPauseString.set("Ejecutar")
         self.modelInitFunc()
         self.currentStep = 0;
-        self.setStatusStr("Model has been reset")
+        self.setStatusStr("El modelo ha sido reiniciado")
         self.drawModel()
 
     def drawModel(self):
